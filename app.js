@@ -7,7 +7,7 @@ let model = example(),
   sequence = 0,
   loadSequence = 0,
   ready = false,
-  sourceLabel = "Generated study";
+  sourceLabel = "Sample image";
 function el(tag, text) {
   const e = document.createElement(tag);
   e.textContent = text;
@@ -83,6 +83,8 @@ function inspect() {
     y >= size
   )
     return;
+  $("cell-marker").style.left = `${((x + 0.5) / size) * 100}%`;
+  $("cell-marker").style.top = `${((y + 0.5) / size) * 100}%`;
   const i = y * size + x,
     approx = size / 2 ** result.payload.levels;
   $("coefficient-value").textContent =
@@ -148,7 +150,7 @@ worker.onmessage = ({ data }) => {
   render();
   message(
     mode === "encode"
-      ? "Reconstruction ready. File size measures the actual sparse JSON representation."
+      ? "Reconstruction ready."
       : "Coefficient file reconstructed. Source-reference quality is unavailable.",
   );
 };
@@ -171,7 +173,7 @@ $("example").onclick = () => {
   loadSequence++;
   mode = "encode";
   model = example();
-  sourceLabel = "Generated study";
+  sourceLabel = "Sample image";
   run();
 };
 $("reuse").onclick = () => {
@@ -282,3 +284,20 @@ $("image-file").onchange = async () => {
   }
 };
 run();
+
+$("details-open").onclick = () => $("details-panel").showModal();
+$("details-close").onclick = () => $("details-panel").close();
+$("coefficients").onclick = (event) => {
+  if (!ready) return;
+  const rect = event.currentTarget.getBoundingClientRect(),
+    size = result.payload.size;
+  $("column").value = Math.min(
+    size - 1,
+    Math.max(0, Math.floor(((event.clientX - rect.left) / rect.width) * size)),
+  );
+  $("row").value = Math.min(
+    size - 1,
+    Math.max(0, Math.floor(((event.clientY - rect.top) / rect.height) * size)),
+  );
+  inspect();
+};

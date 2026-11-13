@@ -4,6 +4,10 @@ A local image-processing workbench for two-dimensional Haar transforms, detail s
 
 ![Wavelet workbench](docs/workbench.png)
 
+## Interface
+
+Source, coefficient heatmap, and reconstruction share the main image workspace. The retention slider sits underneath, followed by measured quality and a coordinate inspector. Click the heatmap to select a coefficient; numeric controls remain available for keyboard use. Detailed quality notes and file exports open separately.
+
 ## Run
 
 ```sh

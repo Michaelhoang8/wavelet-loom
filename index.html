@@ -9,8 +9,9 @@
   </head>
   <body>
     <header>
-      <a href="/">wavelet loom<span>IMAGE / FREQUENCY / DETAIL</span></a>
+      <h1>Wavelet Loom</h1>
       <div>
+        <button id="example">Sample</button>
         <button id="image-open">Open image</button
         ><button id="coeff-open">Open coefficients</button
         ><input
@@ -22,15 +23,43 @@
       </div>
     </header>
     <main>
-      <section class="hero">
-        <p class="eyebrow">A study in what remains</p>
-        <h1>Unweave the image.<br />Choose what to keep.</h1>
-        <p>
-          Separate broad structure from fine detail with a two-dimensional Haar
-          transform. Retain, quantize, and reconstruct—and measure the
-          difference.
-        </p>
+      <section class="images">
+        <figure>
+          <figcaption>Source <span id="source-label"></span></figcaption>
+          <canvas
+            id="source"
+            width="128"
+            height="128"
+            aria-label="Grayscale source image"
+          ></canvas>
+        </figure>
+        <figure>
+          <figcaption>Coefficients</figcaption>
+          <div class="coefficient-image">
+            <canvas
+              id="coefficients"
+              width="128"
+              height="128"
+              aria-label="Signed coefficient heatmap"
+            ></canvas
+            ><span id="cell-marker" aria-hidden="true"></span>
+          </div>
+        </figure>
+        <figure>
+          <figcaption>Reconstruction</figcaption>
+          <canvas
+            id="reconstruction"
+            width="128"
+            height="128"
+            aria-label="Reconstructed grayscale image"
+          ></canvas>
+        </figure>
       </section>
+      <p class="caption">
+        Coefficient brightness uses a logarithmic scale: coral is positive, blue
+        is negative, dark is zero. The upper-left block holds the coarsest
+        approximation, which is always selected.
+      </p>
       <div class="controls">
         <label>Decomposition levels<select id="levels"></select></label
         ><label
@@ -52,44 +81,9 @@
             <option>64</option>
             <option>128</option>
           </select></label
-        ><button id="example">Example</button>
+        ><button id="details-open">Details &amp; exports</button>
       </div>
-      <p id="message" role="status"></p>
       <div id="metrics" class="metrics"></div>
-      <section class="images">
-        <figure>
-          <figcaption>01 / Source <span id="source-label"></span></figcaption>
-          <canvas
-            id="source"
-            width="128"
-            height="128"
-            aria-label="Grayscale source image"
-          ></canvas>
-        </figure>
-        <figure>
-          <figcaption>02 / Quantized coefficients</figcaption>
-          <canvas
-            id="coefficients"
-            width="128"
-            height="128"
-            aria-label="Signed coefficient heatmap"
-          ></canvas>
-        </figure>
-        <figure>
-          <figcaption>03 / Reconstruction</figcaption>
-          <canvas
-            id="reconstruction"
-            width="128"
-            height="128"
-            aria-label="Reconstructed grayscale image"
-          ></canvas>
-        </figure>
-      </section>
-      <p class="caption">
-        Coefficient brightness uses a logarithmic scale: coral is positive, blue
-        is negative, dark is zero. The upper-left block holds the coarsest
-        approximation, which is always selected.
-      </p>
       <section class="inspect">
         <h2>Inspect a coefficient</h2>
         <div class="coordinates">
@@ -110,6 +104,13 @@
           the source image. Numeric controls provide keyboard access.
         </p>
       </section>
+      <p id="message" role="status"></p>
+    </main>
+    <dialog id="details-panel" aria-label="Quality and exports">
+      <div class="dialog-heading">
+        <h2>Details &amp; exports</h2>
+        <button id="details-close" aria-label="Close details">Close</button>
+      </div>
       <div class="exports">
         <button id="save" disabled>Save coefficient file</button
         ><button id="png" disabled>Download reconstruction PNG</button
@@ -151,7 +152,6 @@
           processing stays in this browser.
         </p>
       </details>
-    </main>
-    <footer>Less detail is a choice. Make it visible.</footer>
+    </dialog>
   </body>
 </html>
