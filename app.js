@@ -87,8 +87,30 @@ function inspect() {
   $("cell-marker").style.top = `${((y + 0.5) / size) * 100}%`;
   const i = y * size + x,
     approx = size / 2 ** result.payload.levels;
+  let bandX = 0,
+    bandY = 0,
+    bandSize = approx,
+    bandName = `Level ${result.payload.levels} approximation`;
+  for (
+    let level = 1, extent = size;
+    level <= result.payload.levels;
+    level++, extent /= 2
+  ) {
+    const half = extent / 2;
+    if (x >= half || y >= half) {
+      bandX = x >= half ? half : 0;
+      bandY = y >= half ? half : 0;
+      bandSize = half;
+      bandName = `Level ${level} ${x >= half && y >= half ? "diagonal" : x >= half ? "horizontal" : "vertical"} detail`;
+      break;
+    }
+  }
+  const band = $("band-marker");
+  band.style.left = `${(bandX / size) * 100}%`;
+  band.style.top = `${(bandY / size) * 100}%`;
+  band.style.width = band.style.height = `${(bandSize / size) * 100}%`;
   $("coefficient-value").textContent =
-    `${x < approx && y < approx ? "Approximation" : "Detail"} [${x}, ${y}] · reconstructed coefficient ${Number(result.quantized[i].toPrecision(7))}${mode === "encode" ? " · original " + Number(result.coefficients[i].toPrecision(7)) : ""}`;
+    `${bandName} [${x}, ${y}] · reconstructed coefficient ${Number(result.quantized[i].toPrecision(7))}${mode === "encode" ? " · original " + Number(result.coefficients[i].toPrecision(7)) : ""}`;
 }
 function render() {
   const size = result.payload.size,
@@ -148,6 +170,11 @@ worker.onmessage = ({ data }) => {
   ready = true;
   enabled(true);
   render();
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches)
+    $("reconstruction").animate([{ opacity: 0.4 }, { opacity: 1 }], {
+      duration: 260,
+      easing: "ease-out",
+    });
   message(
     mode === "encode"
       ? "Reconstruction ready."

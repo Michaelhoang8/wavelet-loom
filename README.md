@@ -8,6 +8,8 @@ A local image-processing workbench for two-dimensional Haar transforms, detail s
 
 Source, coefficient heatmap, and reconstruction share the main image workspace. The retention slider sits underneath, followed by measured quality and a coordinate inspector. Click the heatmap to select a coefficient; numeric controls remain available for keyboard use. Detailed quality notes and file exports open separately.
 
+The selected coefficient also outlines its Haar subband and identifies its level and direction. The outline moves between bands, while new reconstructions fade in briefly; both effects respect reduced-motion preferences. Overlays are separate from the canvas and never enter PNG exports.
+
 ## Run
 
 ```sh
